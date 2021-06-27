@@ -1,11 +1,14 @@
 # MapData
 Simple implementation to convert data reader from a database in an object or list
 
+- The field name of table in database must match with the property name of class
+
 ## Simple Usage
 This example used a mysql database
 
 Data stored in database
 | id_user | name | last_name | username | password | creation_date |
+| ------ | ------ | ------ | ------ | ------ | ------ |
 | 1 | Name1 | LastName1 | Username1 | Password1 | 2021-06-26 22:59:13 |
 | 2 | Name2 | LastName2 | Username2 | Password2 | 2021-06-26 22:59:13 |
 | 3 | Name3 | LastName3 | Username3 | Password3 | 2021-06-26 22:59:13 |
@@ -25,6 +28,8 @@ Data stored in database
 ### Map to object
 
 ```csharp
+User user = null;
+
 string query = @"select 
                   id_user as Id
                   , name as Name
@@ -45,6 +50,7 @@ using (MySqlDataReader reader = cmd.ExecuteReader()) {
 ### Map to list
 
 ```csharp
+List<User> users = nul;
 string query = @"select 
                   id_user as Id
                   , name as Name
