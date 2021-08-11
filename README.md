@@ -19,6 +19,8 @@ Data stored in table
 | 2 | Mash Kyrielight | F | Fate Grand Order | 
 | 3 | Shinobu Oshino | F | Monogatari Series |
 
+<br />
+
 ### Character class
 
 ```csharp
@@ -30,6 +32,8 @@ public class Character
     public string Serie { get; set; }
 }
 ```
+
+<br />
 
 ### Map Object
 
@@ -76,6 +80,8 @@ public Character GetCharacter(int id)
     return character;
 }
 ```
+
+<br />
 
 ### Map List
 
