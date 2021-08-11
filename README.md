@@ -1,5 +1,5 @@
 # MapData
-Simple implementation to tranform data from datareader into an object or list
+Simple implementation to transform data from datareader into an object or list
 <br /> <br />
 Methods:
   - Mapper.MapObject
