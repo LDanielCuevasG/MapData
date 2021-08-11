@@ -36,7 +36,7 @@ public class Character
 
 <br />
 
-### Map Object
+### MapObject
 
 ```csharp
 public Character GetCharacter(int id)
@@ -84,7 +84,7 @@ public Character GetCharacter(int id)
 
 <br />
 
-### Map List
+### MapList
 
 ```csharp
 public List<Character> GetCharacters()
