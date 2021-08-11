@@ -4,8 +4,10 @@ Methods:
   - Mapper.MapObject
   - Mapper.MapList
 
-## Considerations
+### Considerations
 - The field name must match with property name of class
+
+<br />
 
 ## Usage
 This example uses a mysql database
@@ -54,7 +56,7 @@ public Character GetCharacter(int id)
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader()) {
-                    __character = Mapper.MapObject<Character>(reader);__
+                    character = Mapper.MapObject<Character>(reader);
                 }
                 connection.Close();
             }
@@ -98,7 +100,7 @@ public List<Character> GetCharacters()
                 cmd.CommandTimeout = 600;
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader()) {
-                    __characters = Mapper.MapList<Character>(reader);__
+                    characters = Mapper.MapList<Character>(reader);
                 }
                 connection.Close();
             }
