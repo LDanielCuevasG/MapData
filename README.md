@@ -1,72 +1,120 @@
 # MapData
-Simple implementation to convert data reader from a database in an object or list
+Simple implementation to tranform data from datareader into an object or list
+Methods:
+  - Mapper.MapObject
+  - Mapper.MapList
 
-- The field name of table in database must match with the property name of class
+## Considerations
+- The field name must match with property name of class
 
-## Simple Usage
-This example used a mysql database
+## Usage
+This example uses a mysql database
 
-Data stored in database
-| id_user | name | last_name | username | password | creation_date |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| 1 | Name1 | LastName1 | Username1 | Password1 | 2021-06-26 22:59:13 |
-| 2 | Name2 | LastName2 | Username2 | Password2 | 2021-06-26 22:59:13 |
-| 3 | Name3 | LastName3 | Username3 | Password3 | 2021-06-26 22:59:13 |
+Data stored in table
+| character_id | name | genre | serie | 
+| ------ | ------ | ------ | ------ |
+| 1 | Maki Nishikino | F | Love Live! | 
+| 2 | Mash Kyrielight | F | Fate Grand Order | 
+| 3 | Shinobu Oshino | F | Monogatari Series |
 
-### User class
+### Character class
 
 ```csharp
-  public class User
-  {
-      public int Id { get; set; }
-      public string  Name { get; set; }
-      public string  LastName { get; set; }
-      public string  Username { get; set; }
-      public string  Password { get; set; }
-      public DateTime  CreationDate { get; set; }
-  }
+public class Character
+{
+    public string CharacterId { get; set; }
+    public string Name { get; set; }
+    public string Genre { get; set; }
+    public string Serie { get; set; }
+}
 ```
 
-### Map to object
+### Map Object
 
 ```csharp
-User user = null;
+public Character GetCharacter(int id)
+{
+    Character character = null;
+    MySqlConnection connection = null;
+    string query = @"select 
+                      character_id as CharacterId
+                        , name as Name
+                        , genre as Genre
+                        , serie as Serie
+                        from tbl_character
+                      where character_id = @id";
 
-string query = @"select 
-                  id_user as Id
-                  , name as Name
-                  , last_name as LastName
-                  , username as Username
-                  , password as Password
-                  , creation_date as CreationDate
-                  from tbl_users u
-                  where u.id_user = 1";
-// Code omitted
+    try
+    {
+        using (connection = new MySqlConnection(_appSettings.Connection_DBTest))
+        {
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.CommandTimeout = 600;
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader()) {
+                    __character = Mapper.MapObject<Character>(reader);__
+                }
+                connection.Close();
+            }
+        }
+    }
+    catch (Exception e) {
+        throw;
+    }
+    finally {
+        if (connection != null) {
+            if (connection.State != System.Data.ConnectionState.Closed) {
+                connection.Close();
+            }
+        }
+    }
 
-using (MySqlDataReader reader = cmd.ExecuteReader()) {
-    user = MapData.MapObject.Map<User>(reader);
+    return character;
 }
-
 ```
 
-### Map to list
+### Map List
 
 ```csharp
-List<User> users = nul;
+public List<Character> GetCharacters()
+{
+    List<Character> characters = null;
+    MySqlConnection connection = null;
+    string query = @"select 
+                      character_id as CharacterId
+                        , name as Name
+                        , genre as Genre
+                        , serie as Serie
+                        from tbl_character";
 
-string query = @"select 
-                  id_user as Id
-                  , name as Name
-                  , last_name as LastName
-                  , username as Username
-                  , password as Password
-                  , creation_date as CreationDate
-                  from tbl_users";
-                                
-// Code omitted
+    try
+    {
+        using (connection = new MySqlConnection(_appSettings.Connection_DBTest))
+        {
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.CommandTimeout = 600;
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader()) {
+                    __characters = Mapper.MapList<Character>(reader);__
+                }
+                connection.Close();
+            }
+        }
+    }
+    catch (Exception e) {
+        throw;
+    }
+    finally {
+        if (connection != null) {
+            if (connection.State != System.Data.ConnectionState.Closed) {
+                connection.Close();
+            }
+        }
+    }
 
-using (MySqlDataReader reader = cmd.ExecuteReader()) {
-    users = MapData.MapList.Map<User>(reader);
+    return characters;
 }
-
 ```
