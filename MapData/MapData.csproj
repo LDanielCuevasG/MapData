@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Description>Simple implementation to convert data reader from a database in an object or list</Description>
+    <Description>Simple implementation to tranform data from datareader into an object or list</Description>
     <Company />
     <Authors>Luis Cuevas</Authors>
+    <Version>1.1.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
