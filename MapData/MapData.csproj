@@ -5,7 +5,7 @@
     <Description>Simple implementation to transform data from datareader into an object or list</Description>
     <Company />
     <Authors>Luis Cuevas</Authors>
-    <Version>1.1.1</Version>
+    <Version>1.1.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

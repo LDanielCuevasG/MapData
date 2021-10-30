@@ -16,30 +16,30 @@ namespace MapData
             T data = Activator.CreateInstance<T>();
             Type dataType = data.GetType();
 
-            try
+            if (reader.HasRows)
             {
-                if (reader.HasRows == true)
+                int columns = reader.FieldCount;
+                while (reader.Read())
                 {
-                    int numColumns = reader.FieldCount;
-                    if (reader.Read() == true)
+                    for (int i = 0; i < columns; ++i)
                     {
-                        for (int i = 0; i < numColumns; ++i)
+                        string columnName = reader.GetName(i);
+                        object columnValue = reader.GetValue(i);
+                        if (columnValue != DBNull.Value)
                         {
-                            string columnName = reader.GetName(i);
-                            object columnValue = reader.GetValue(i);
                             PropertyInfo dataProperty = dataType.GetProperty(columnName);
                             if (dataProperty != null)
                             {
                                 Type dataPropertyType = dataProperty.PropertyType;
                                 dataProperty.SetValue(data, Convert.ChangeType(columnValue, dataPropertyType));
                             }
-
                         }
+
                     }
                 }
             }
-            catch (Exception e) {
-                throw;
+            else  {
+                return default(T);
             }
 
             return data;
@@ -48,38 +48,38 @@ namespace MapData
         public static List<T> MapList<T>(DbDataReader reader)
         {
             List<T> list = Activator.CreateInstance<List<T>>();
-            T data = Activator.CreateInstance<T>();
-            Type dataType = data.GetType();
+            T objectTarget = Activator.CreateInstance<T>();
+            Type dataType = objectTarget.GetType();
 
-            try
+            if (reader.HasRows)
             {
-                if (reader.HasRows == true)
+                int columns = reader.FieldCount;
+                while (reader.Read())
                 {
-                    int numColumns = reader.FieldCount;
-                    while (reader.Read() == true)
+                    T single = Activator.CreateInstance<T>();
+                    Type singleType = objectTarget.GetType();
+
+                    for (int i = 0; i < columns; ++i)
                     {
-                        T entry = Activator.CreateInstance<T>();
-                        Type entryType = entry.GetType();
-
-                        for (int i = 0; i < numColumns; ++i)
+                        string columnName = reader.GetName(i);
+                        object columnValue = reader.GetValue(i);
+                        if (columnValue != DBNull.Value)
                         {
-                            string columnName = reader.GetName(i);
-                            object columnValue = reader.GetValue(i);
-                            PropertyInfo entryProperty = entryType.GetProperty(columnName);
-                            if (entryProperty != null)
+                            PropertyInfo singleProperty = singleType.GetProperty(columnName);
+                            if (singleProperty != null)
                             {
-                                Type entryPropertyType = entryProperty.PropertyType;
-                                entryProperty.SetValue(entry, Convert.ChangeType(columnValue, entryPropertyType));
+                                Type singlePropertyType = singleProperty.PropertyType;
+                                singleProperty.SetValue(single, Convert.ChangeType(columnValue, singlePropertyType));
                             }
-
                         }
 
-                        list.Add(entry);
                     }
+
+                    list.Add(single);
                 }
             }
-            catch (Exception e) {
-                throw;
+            else {
+                return default(List<T>);
             }
 
             return list;
